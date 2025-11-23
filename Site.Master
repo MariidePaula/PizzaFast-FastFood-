@@ -1,0 +1,825 @@
+<%-- Diretiva Master: Define esta página como um Master Page (Modelo). --%>
+<%-- 'Language="C#"' define a linguagem de code-behind. --%>
+<%-- 'CodeBehind' aponta para o arquivo de código C# (Site.Master.cs). --%>
+<%-- 'Inherits' define a classe C# que herda as propriedades desta página. --%>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="FastPizza.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<%-- Define o idioma da página como Português do Brasil. --%>
+<html lang="pt-BR">
+<head runat="server">
+    <%-- Define a codificação de caracteres como UTF-8. --%>
+    <meta charset="utf-8" />
+    <%-- Configuração para responsividade (visualização em dispositivos móveis). --%>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%-- Define o título da página. O <%: Page.Title %> insere o título da página de conteúdo. --%>
+    <title><%: Page.Title %> - Fast Pizza</title>
+    
+    <%-- Inclusão do CSS do Bootstrap 5 para estilos responsivos. --%>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" /> 
+    <%-- Inclusão do Font Awesome para ícones. --%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <%-- Inclusão da fonte 'Poppins' do Google Fonts. --%>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <%-- Definição de Favicon (ícone da aba do navegador) com um emoji de pizza 🍕. --%>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍕%3C/text%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍕%3C</text>%3E%3C/svg%3E" />
+    
+    <%-- Início do bloco de estilos CSS customizados. --%>
+    <style>
+        /* Define a fonte Poppins e a cor de fundo clara para o corpo. */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFBF7; /* Fundo Creme/Claro */
+        }
+        /* Estilo para a marca/logo do navbar (tamanho, peso e cor de destaque). */
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #E64A19 !important; /* Cor Laranja Escuro (destaque) */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* Estilo para o ícone da pizza dentro da marca. */
+        .navbar-brand i {
+            font-size: 1.8rem;
+        }
+        /* Media Query para ajustar a marca em telas pequenas (smartphones). */
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            .navbar-brand i {
+                font-size: 1.4rem;
+            }
+            /* Ajusta a margem superior do conteúdo principal em telas pequenas. */
+            .main-content {
+                margin-top: 70px;
+            }
+        }
+        /* Estilos para a barra de navegação (fixa, sombra, fundo). */
+        .navbar {
+            background-color: #FFFBF7 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #e0e0e0;
+            position: fixed; /* Barra de navegação fixa no topo. */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            width: 100%;
+        }
+        /* Limita a largura do container dentro do navbar. */
+        .navbar .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        /* Limita a largura do container no conteúdo principal. */
+        .main-content .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* Estiliza o colapso do navbar para alinhar itens. */
+        .navbar .navbar-collapse {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            flex-grow: 1;
+        }
+        /* Centraliza os links principais de navegação horizontalmente (menu). */
+        .navbar-nav.mx-auto {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            margin: 0 !important;
+            white-space: nowrap;
+        }
+        /* Agrupa os ícones do lado direito do navbar (carrinho e usuário). */
+        .navbar-right-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+        /* Impede que a marca diminua. */
+        .navbar-brand {
+            flex-shrink: 0;
+        }
+        /* Media Query para telas médias/pequenas (tablet/mobile) para o menu colapsado. */
+        @media (max-width: 991px) {
+            /* Altera a direção para coluna e estica o alinhamento. */
+            .navbar .navbar-collapse {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            /* Desfaz a centralização absoluta do menu no mobile/tablet. */
+            .navbar-nav.mx-auto {
+                position: static;
+                transform: none;
+                text-align: center;
+                margin: 10px 0 !important;
+                justify-content: center;
+            }
+            /* Centraliza os ícones da direita no mobile/tablet. */
+            .navbar-right-icons {
+                margin-left: 0;
+                justify-content: center;
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+        /* Estilo padrão para os links de navegação. */
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative; 
+            display: inline-block;
+        }
+        /* Efeito hover: muda a cor do link para o destaque. */
+        .nav-link:hover {
+            color: #E64A19 !important;
+        }
+        
+        /* Estilos para os itens de dropdown (Menu de Usuário/Admin). */
+        .dropdown-item {
+            transition: all 0.2s ease;
+        }
+        
+        /* Cor de fundo e texto ao passar o mouse ou selecionar um item do dropdown. */
+        .dropdown-item:hover,
+        .dropdown-item:focus,
+        .dropdown-item.active,
+        .dropdown-item:active {
+            background-color: #E64A19 !important;
+            color: white !important;
+        }
+        
+        /* Mantém a cor do ícone branca nos estados hover/active. */
+        .dropdown-item:hover i,
+        .dropdown-item:focus i,
+        .dropdown-item.active i,
+        .dropdown-item:active i {
+            color: white !important;
+        }
+        
+        /* Mantém o estilo para cliques no dropdown. */
+        .dropdown-item:not(:disabled):not(.disabled):active,
+        .dropdown-item:not(:disabled):not(.disabled).active {
+            background-color: #E64A19 !important;
+            color: white !important;
+        }
+        
+        /* Estilos de foco para campos de seleção (select) para usar a cor de destaque. */
+        select.form-control:focus,
+        select:focus {
+            border-color: #E64A19;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(230, 74, 25, 0.25);
+        }
+        
+        /* Estilos para opções do select (tentativa de contornar problemas de estilo nativo). */
+        select option {
+            background-color: white !important;
+            color: #333 !important;
+        }
+        
+        select option:hover,
+        select option:focus,
+        select option:active {
+            background: #E64A19 !important;
+            background-color: #E64A19 !important;
+            color: white !important;
+        }
+        
+        select option:checked {
+            background-color: white !important;
+            color: #333 !important;
+        }
+        
+        select.form-control option {
+            padding: 8px;
+        }
+        
+        /* Estilo do conteúdo principal: altura mínima, padding e margem superior para compensar o navbar fixo. */
+        .main-content {
+            min-height: calc(100vh - 200px); /* Garante que o footer fique na parte inferior em telas pequenas. */
+            padding: 20px 0;
+            margin-top: 76px; /* Ajusta a margem superior devido ao navbar fixo. */
+        }
+        
+        /* Estilo para o container de toasts (mensagens de feedback), fixo no topo e à direita. */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        /* Ajuste do toast-container e toasts para telas pequenas. */
+        @media (max-width: 768px) {
+            .toast-container {
+                top: 10px;
+                right: 10px;
+                left: 10px; /* Expande para toda a largura em mobile. */
+            }
+            .toast {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+
+        /* Estilo para o badge de quantidade de itens no ícone do carrinho. */
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background-color: #E64A19; /* Cor de destaque (Laranja Escuro) */
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: bold;
+            border: 2px solid #FFFBF7; /* Borda da cor de fundo para destaque. */
+            min-width: 18px;
+            text-align: center;
+        }
+    </style>
+
+    <%-- Placeholder para conteúdo específico do <head> de cada página. --%>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+    
+</head>
+<body>
+    <%-- O formulário principal do ASP.NET Web Forms (obrigatório). --%>
+    <form id="form1" runat="server">
+        <%-- Gerenciador de Scripts para habilitar funcionalidades AJAX/UpdatePanels. --%>
+        <asp:ScriptManager runat="server">
+        </asp:ScriptManager>
+        
+        <%-- Início da Barra de Navegação (Navbar) com Bootstrap. --%>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <%-- Link da Marca/Logo. 'ResolveUrl' garante o caminho correto para o Default.aspx. --%>
+                <a class="navbar-brand" href="<%= ResolveUrl("~/Default.aspx") %>">
+                    <i class="fa-solid fa-pizza-slice"></i> PizzaExpress
+                </a>
+                
+                <%-- Botão Hamburger para dispositivos móveis (Bootstrap Toggler). --%>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <%-- Conteúdo colapsável do Navbar. --%>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <%-- Lista de links principais (centralizada). --%>
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="<%= ResolveUrl("~/Default.aspx") %>">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<%= ResolveUrl("~/Cardapio.aspx") %>">Cardápio</a>
+                        </li>
+                        <%-- Link Condicional (Meus Pedidos/Dashboard Admin). --%>
+                        <li class="nav-item">
+                            <%-- Panel para o link 'Meus Pedidos' (visível por padrão, controlado pelo code-behind). --%>
+                            <asp:Panel ID="pnlLinkMeusPedidos" runat="server">
+                                <a class="nav-link" href="<%= ResolveUrl("~/MeusPedidos.aspx") %>">Meus Pedidos</a>
+                            </asp:Panel>
+                            <%-- Panel para o link 'Dashboard Admin' (invisível por padrão, controlado pelo code-behind). --%>
+                            <asp:Panel ID="pnlLinkDashboardAdmin" runat="server" Visible="false">
+                                <a class="nav-link" href="<%= ResolveUrl("~/Admin/Dashboard.aspx") %>">
+                                    <i class="fa-solid fa-pizza-slice"></i> Dashboard
+                                </a>
+                            </asp:Panel>
+                        </li>
+                    </ul>
+                    
+                    <%-- Ícones da direita: Carrinho e Usuário/Login. --%>
+                    <div class="navbar-right-icons">
+                        <%-- UpdatePanel para atualizar o ícone do carrinho via AJAX (sem recarregar a página). --%>
+                        <asp:UpdatePanel ID="upCarrinho" runat="server" UpdateMode="Conditional">
+                            <ContentTemplate>
+                                <%-- Link para o Carrinho. --%>
+                                <a class="nav-link" href="<%= ResolveUrl("~/Carrinho.aspx") %>" style="font-size: 1.1rem; position: relative;">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <%-- Rótulo para a quantidade de itens no carrinho (Badge). --%>
+                                    <asp:Label ID="lblQtdCarrinho" runat="server" CssClass="cart-badge" Visible="false"></asp:Label>
+                                </a>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+
+                        <%-- Panel para Usuário Logado (exibe dropdown). --%>
+                        <asp:Panel ID="pnlUsuarioLogado" runat="server" Visible="false">
+                            <div class="dropdown">
+                                <%-- Botão do Dropdown (ícone de usuário). --%>
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.1rem;">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                                <%-- Menu do Dropdown do Usuário. --%>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="<%= ResolveUrl("~/MeuPerfil.aspx") %>"><i class="fas fa-user-circle"></i> Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="<%= ResolveUrl("~/MeusPedidos.aspx") %>"><i class="fas fa-list"></i> Meus Pedidos</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <%-- Botão de Logout (ASP:LinkButton executa evento no code-behind). --%>
+                                    <li><asp:LinkButton ID="btnLogout" runat="server" CssClass="dropdown-item" OnClick="BtnLogout_Click"><i class="fas fa-sign-out-alt"></i> Sair</asp:LinkButton></li>
+                                </ul>
+                            </div>
+                        </asp:Panel>
+                        
+                        <%-- Panel para Admin Logado (exibe dropdown, separado do usuário). --%>
+                        <asp:Panel ID="pnlAdminLogado" runat="server" Visible="false">
+                            <div class="dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.1rem;">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                                <%-- Menu do Dropdown do Admin. --%>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">
+                                    <li><a class="dropdown-item" href="<%= ResolveUrl("~/Admin/Clientes.aspx") %>"><i class="fas fa-users"></i> Clientes</a></li>
+                                    <li><a class="dropdown-item" href="<%= ResolveUrl("~/Admin/Pedidos.aspx") %>"><i class="fas fa-list"></i> Pedidos</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <%-- Botão de Logout para Admin. --%>
+                                    <li><asp:LinkButton ID="btnLogoutAdmin" runat="server" CssClass="dropdown-item" OnClick="BtnLogoutAdmin_Click"><i class="fas fa-sign-out-alt"></i> Sair</asp:LinkButton></li>
+                                </ul>
+                            </div>
+                        </asp:Panel>
+
+                        <%-- Panel para Usuário Deslogado (exibe apenas ícone de login). --%>
+                        <asp:Panel ID="pnlUsuarioDeslogado" runat="server" Visible="false">
+                            <a class="nav-link" href="<%= ResolveUrl("~/Login.aspx") %>" style="font-size: 1.1rem;">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        </asp:Panel>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <%-- Área de Conteúdo Principal (onde o conteúdo das páginas é inserido). --%>
+        <div class="main-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        
+        <%-- Rodapé da página (Footer). --%>
+        <footer class="bg-light text-center text-muted py-4 mt-5">
+            <div class="container">
+                <p class="mb-0">&copy; 2025 PizzaExpress. Todos os direitos reservados.</p>
+            </div>
+        </footer>
+        
+        <%-- Container para exibir Toasts (mensagens flutuantes). --%>
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        </div>
+
+        <%-- Modal de Login (para ser exibido quando o usuário tentar acessar recurso restrito). --%>
+        <div class="modal fade" id="modalLogin" tabindex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLoginLabel">
+                            <i class="fas fa-lock"></i> Faça Login para Continuar
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <%-- ASP:Labels e TextBoxes para o formulário de login no Modal. --%>
+                    <div class="modal-body">
+                        <asp:Label ID="lblMensagemModal" runat="server" CssClass="alert alert-danger" Visible="false" style="display: block; margin-bottom: 20px;"></asp:Label>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email:</label>
+                            <asp:TextBox ID="txtEmailModal" runat="server" CssClass="form-control" placeholder="seu@email.com" TextMode="Email" />
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Senha:</label>
+                            <asp:TextBox ID="txtSenhaModal" runat="server" CssClass="form-control" TextMode="Password" placeholder="••••••••" />
+                        </div>
+                        
+                        <div class="text-center mb-3">
+                            <p class="text-muted small">Não tem uma conta? <a href="<%= ResolveUrl("~/Cadastro.aspx") %>" class="text-danger fw-semibold">Cadastre-se aqui</a></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <%-- Botão de Login do Modal. 'OnClick' chama evento no code-behind para processar o login. --%>
+                        <asp:Button ID="btnLoginModal" runat="server" Text="Entrar" CssClass="btn btn-danger w-100" 
+                            OnClick="btnLoginModal_Click" style="background-color: #E64A19; border: none; padding: 10px; font-weight: 600;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <%-- Inclusão do JavaScript do Bootstrap 5 (obrigatório para funcionalidades como Navbar Toggler e Modal). --%>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <%-- Início dos Scripts Customizados --%>
+        
+        <script>
+            (function() {
+                'use strict';
+                
+                // Variável global/local que indica se o usuário/admin está logado (obtida da Session C#).
+                window.usuarioLogado = <%= (Session["ClienteId"] != null || (Session["AdminLogado"] != null && (bool)Session["AdminLogado"])).ToString().ToLower() %>;
+                var usuarioLogado = window.usuarioLogado;
+                
+                // Função para exibir o Modal de Login.
+                function mostrarModalLogin() {
+                    var modalElement = document.getElementById('modalLogin');
+                    if (modalElement) {
+                        var modal = new bootstrap.Modal(modalElement);
+                        modal.show();
+                    }
+                }
+                
+                // Verifica se a área atual é a área de Admin.
+                var isAdminArea = window.location.pathname.toLowerCase().indexOf('/admin/') !== -1;
+                
+                // Handler para eventos de clique em toda a página (captura de fase).
+                var clickHandler = function(e) {
+                    // Ignora a lógica se estiver na área de Admin.
+                    if (isAdminArea) {
+                        return;
+                    }
+                    
+                    var usuarioLogadoAtual = window.usuarioLogado !== undefined ? window.usuarioLogado : usuarioLogado;
+                    
+                    // Se já estiver logado, não faz nada.
+                    if (usuarioLogadoAtual) {
+                        return;
+                    }
+                    
+                    var target = e.target;
+                    var elemento = target;
+                    
+                    // Verifica se o elemento clicado é um botão/link de Admin (para ignorar a modal de login do cliente).
+                    while (elemento && elemento !== document.body) {
+                        if (elemento.getAttribute && elemento.getAttribute('data-admin-button') === 'true') {
+                            return;
+                        }
+                        elemento = elemento.parentElement;
+                    }
+                    
+                    elemento = target;
+                    
+                    // Loop para verificar se o clique é em um elemento que requer login (ex: adicionar ao carrinho).
+                    while (elemento && elemento !== document.body) {
+                        var onclick = elemento.getAttribute('onclick') || '';
+                        var href = elemento.getAttribute('href') || '';
+                        var commandName = elemento.getAttribute('data-command-name') || '';
+                        
+                        // Verifica se é um postback do ASP.NET.
+                        var isPostbackButton = onclick.indexOf('__doPostBack') !== -1 || 
+                                                     href.indexOf('__doPostBack') !== -1 ||
+                                                     onclick.indexOf('javascript:__doPostBack') !== -1;
+                        
+                        var precisaLogin = false;
+                        
+                        // 1. Verifica atributo customizado 'data-require-login'.
+                        if (elemento.getAttribute('data-require-login') === 'true') {
+                            precisaLogin = true;
+                        }
+                        
+                        // 2. Verifica 'CommandName' do ASP.NET (comum em botões de ListViews/GridViews).
+                        if (commandName === 'AdicionarCarrinho' || commandName.indexOf('Carrinho') !== -1) {
+                            precisaLogin = true;
+                        }
+                        
+                        // 3. Verifica o texto do botão (heurística).
+                        var texto = (elemento.textContent || elemento.innerText || '').toLowerCase();
+                        if (texto.indexOf('finalizar') === -1 && texto.indexOf('pedido') === -1) {
+                            if (texto.indexOf('adicionar') !== -1 && 
+                                (texto.indexOf('carrinho') !== -1 || texto.indexOf('cart') !== -1)) {
+                                precisaLogin = true;
+                            }
+                        }
+                        
+                        // Ignora botões de 'Finalizar Pedido' (a lógica de Finalizar Pedido geralmente lida com login no code-behind).
+                        if (elemento.getAttribute('data-finalizar-pedido') === 'true' || 
+                            elemento.id && elemento.id.indexOf('btnFinalizar') !== -1) {
+                            return;
+                        }
+                        
+                        // 4. Verifica classes (heurística).
+                        var classes = (elemento.className || '').toLowerCase();
+                        if (classes.indexOf('btn-add') !== -1 || 
+                            classes.indexOf('adicionarcarrinho') !== -1 ||
+                            classes.indexOf('add-to-cart') !== -1) {
+                            precisaLogin = true;
+                        }
+                        
+                        // 5. Verifica evento 'onclick' no elemento pai (útil para controles compostos).
+                        var parentElement = elemento.parentElement;
+                        while (parentElement && parentElement !== document.body) {
+                            var parentOnclick = parentElement.getAttribute('onclick') || '';
+                            if (parentOnclick.indexOf('AdicionarCarrinho') !== -1) {
+                                precisaLogin = true;
+                                break;
+                            }
+                            parentElement = parentElement.parentElement;
+                        }
+                        
+                        // Se precisa de login E não está logado E é um botão de postback (ação de servidor):
+                        if (precisaLogin && !usuarioLogadoAtual && isPostbackButton) {
+                            // Impede a ação padrão (o PostBack).
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            // Mostra a modal de login.
+                            mostrarModalLogin();
+                            return false;
+                        }
+                        
+                        elemento = elemento.parentElement;
+                    }
+                };
+                
+                // Adiciona o listener de clique em modo de captura (true) para ser executado antes dos handlers de clique normais.
+                document.removeEventListener('click', clickHandler, true); // Remove antes para evitar duplicidade.
+                document.addEventListener('click', clickHandler, true);
+                
+                // Handler para o evento de SUBMIT do formulário (para capturar submits por ENTER ou botões não-postback).
+                var form = document.getElementById('form1');
+                if (form && !isAdminArea) {
+                    var submitHandler = function(e) {
+                        var usuarioLogadoAtual = window.usuarioLogado !== undefined ? window.usuarioLogado : usuarioLogado;
+                        
+                        if (usuarioLogadoAtual) {
+                            return true;
+                        }
+                        
+                        var submitButton = document.activeElement; // Captura o botão que iniciou o submit.
+                        if (submitButton) {
+                            // Ignora se for o botão de Finalizar Pedido.
+                            if (submitButton.getAttribute('data-finalizar-pedido') === 'true' || 
+                                (submitButton.id && submitButton.id.indexOf('btnFinalizar') !== -1) ||
+                                (submitButton.value && submitButton.value.toLowerCase().indexOf('finalizar') !== -1)) {
+                                return true;
+                            }
+                            
+                            // Verifica se o botão tem a lógica de 'AdicionarCarrinho' e não é um botão de finalização.
+                            var onclick = submitButton.getAttribute('onclick') || '';
+                            if (onclick.indexOf('AdicionarCarrinho') !== -1) {
+                                var texto = (submitButton.textContent || submitButton.innerText || submitButton.value || '').toLowerCase();
+                                if (texto.indexOf('finalizar') === -1 && texto.indexOf('pedido') === -1) {
+                                    if (texto.indexOf('adicionar') !== -1 && 
+                                        (texto.indexOf('carrinho') !== -1 || texto.indexOf('cart') !== -1)) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        e.stopImmediatePropagation();
+                                        mostrarModalLogin();
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        return true;
+                    };
+                    
+                    // Adiciona o listener de submit.
+                    form.removeEventListener('submit', submitHandler, true);
+                    form.addEventListener('submit', submitHandler, true);
+                }
+            })();
+        </script>
+        
+        <script>
+            // Script para estilizar o foco/seleção dos elementos <select> para usar a cor de destaque.
+            document.addEventListener('DOMContentLoaded', function() {
+                var selects = document.querySelectorAll('select.form-control, select');
+                selects.forEach(function(select) {
+                    select.addEventListener('focus', function() {
+                        this.style.borderColor = '#E64A19';
+                    });
+                    select.addEventListener('blur', function() {
+                        this.style.borderColor = '#ddd';
+                    });
+                    select.addEventListener('change', function() {
+                        this.style.borderColor = '#E64A19';
+                        // Adiciona um pequeno delay para a cor voltar ao normal após a mudança.
+                        setTimeout(function() {
+                            select.style.borderColor = '#ddd';
+                        }, 200);
+                    });
+                });
+            });
+        </script>
+        
+        <script>
+            // Função global para exibir mensagens de feedback (toasts) no canto superior direito.
+            function mostrarFeedback(mensagem, tipo) {
+                var toastContainer = document.querySelector('.toast-container');
+                // Se o container não existir, ele é criado (redundância de segurança).
+                if (!toastContainer) {
+                    toastContainer = document.createElement('div');
+                    toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+                    toastContainer.style.zIndex = '9999';
+                    document.body.appendChild(toastContainer);
+                }
+                
+                var toastId = 'toast-' + Date.now();
+                var bgClass = tipo === 'success' ? 'bg-success' : 'bg-danger';
+                var icon = tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+                
+                // Cria o HTML do Toast com Bootstrap e Font Awesome.
+                var toastHtml = '<div id="' + toastId + '" class="toast align-items-center text-white ' + bgClass + ' border-0" role="alert" aria-live="assertive" aria-atomic="true">' +
+                    '<div class="d-flex">' +
+                    '<div class="toast-body">' +
+                    '<i class="fas ' + icon + ' me-2"></i>' + mensagem +
+                    '</div>' +
+                    '<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>' +
+                    '</div>' +
+                    '</div>';
+                
+                // Insere o toast no container.
+                toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+                
+                // Inicializa e mostra o toast com JavaScript do Bootstrap.
+                var toastElement = document.getElementById(toastId);
+                var toast = new bootstrap.Toast(toastElement, {
+                    autohide: true,
+                    delay: 3000 // Tempo de exibição de 3 segundos.
+                });
+                toast.show();
+                
+                // Remove o elemento do DOM após a animação de esconder.
+                toastElement.addEventListener('hidden.bs.toast', function() {
+                    toastElement.remove();
+                });
+            }
+        </script>
+        
+        <script>
+            // Script para aplicar a máscara de telefone (ex: (99) 99999-9999).
+            function aplicarMascaraTelefone() {
+                // Seleciona campos de texto ou tel cujo ID contenha 'txtTelefone'.
+                var camposTelefone = document.querySelectorAll('input[type="text"][id*="txtTelefone"], input[type="tel"][id*="txtTelefone"]');
+                
+                camposTelefone.forEach(function(campo) {
+                    campo.type = 'tel'; // Define o tipo para melhor usabilidade em mobile.
+                    campo.setAttribute('inputmode', 'numeric');
+                    campo.setAttribute('maxlength', '15'); // (99) 99999-9999 tem 15 caracteres.
+                    
+                    // Lógica principal de formatação.
+                    function formatarTelefone(valor) {
+                        var numeros = valor.replace(/\D/g, ''); // Remove tudo que não for dígito.
+                        
+                        if (numeros.length > 11) { // Limita a 11 dígitos (DD + 9 + 8 dígitos).
+                            numeros = numeros.substring(0, 11);
+                        }
+                        
+                        if (numeros.length === 0) {
+                            return '';
+                        } else if (numeros.length <= 2) {
+                            return '(' + numeros;
+                        } else if (numeros.length <= 7) { // Fixo: (DD) XXXX-X
+                            return '(' + numeros.substring(0, 2) + ') ' + numeros.substring(2);
+                        } else { // Celular: (DD) 9XXXX-XXXX
+                            return '(' + numeros.substring(0, 2) + ') ' + numeros.substring(2, 7) + '-' + numeros.substring(7);
+                        }
+                    }
+                    
+                    // Formata valor inicial (se houver).
+                    if (campo.value) {
+                        campo.value = formatarTelefone(campo.value);
+                    }
+                    
+                    // Aplica a formatação a cada digitação.
+                    campo.addEventListener('input', function(e) {
+                        e.target.value = formatarTelefone(e.target.value);
+                    });
+                    
+                    // Impede a digitação de caracteres não-numéricos.
+                    campo.addEventListener('keypress', function(e) {
+                        var char = String.fromCharCode(e.which);
+                        if (!/[0-9]/.test(char)) {
+                            e.preventDefault();
+                        }
+                    });
+                    
+                    // Trata colagem de texto (apenas números são mantidos e formatados).
+                    campo.addEventListener('paste', function(e) {
+                        e.preventDefault();
+                        var texto = (e.clipboardData || window.clipboardData).getData('text');
+                        var numeros = texto.replace(/\D/g, '');
+                        if (numeros.length > 0) {
+                            // Limpa e dispara input para reformatar.
+                            campo.value = '';
+                            campo.dispatchEvent(new Event('input'));
+                            campo.value = numeros.substring(0, 11);
+                            campo.dispatchEvent(new Event('input'));
+                        }
+                    });
+                });
+            }
+            
+            // Chama a função ao carregar a página (DOMContentLoaded) e/ou se já estiver carregada.
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', aplicarMascaraTelefone);
+            } else {
+                aplicarMascaraTelefone();
+            }
+            
+            // Garante que a máscara seja reaplicada após eventos AJAX (UpdatePanel) do ASP.NET.
+            if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+                Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function() {
+                    aplicarMascaraTelefone();
+                });
+            }
+        </script>
+        
+        <script>
+            // Script para garantir que campos de input de estoque/quantidade só aceitem números inteiros não-negativos.
+            function aplicarValidacaoNumeroInteiro() {
+                var todosCampos = document.querySelectorAll('input[type="number"]');
+                // Filtra campos de número cujo ID contenha 'estoque' ou 'quantidade' e não tenham 'step' diferente de 1.
+                var camposNumericos = Array.from(todosCampos).filter(function (campo) {
+                    var step = campo.getAttribute('step');
+                    var id = campo.id.toLowerCase();
+                    return (id.indexOf('estoque') !== -1 || id.indexOf('quantidade') !== -1) &&
+                        (step === null || step === '1' || step === '');
+                });
+
+                camposNumericos.forEach(function (campo) {
+                    campo.setAttribute('min', '0'); // Mínimo de 0.
+                    campo.setAttribute('step', '1'); // Passo de 1 (inteiro).
+                    campo.setAttribute('inputmode', 'numeric');
+
+                    // Garante que apenas números inteiros fiquem no campo.
+                    campo.addEventListener('input', function (e) {
+                        var valor = e.target.value;
+
+                        var numeros = valor.replace(/[^0-9]/g, ''); // Remove qualquer coisa que não seja dígito.
+
+                        if (valor !== numeros) {
+                            e.target.value = numeros;
+                        }
+
+                        // Garante que o valor não seja negativo.
+                        if (e.target.value < 0) {
+                            e.target.value = '0';
+                        }
+                    });
+
+                    // Impede a digitação de caracteres não-numéricos ou pontuações (exceto teclas de controle).
+                    campo.addEventListener('keypress', function (e) {
+                        // Teclas permitidas: Backspace, Tab, Enter, Esc, Delete, Setas, Ctrl+A (selecionar tudo).
+                        if (e.which === 8 || e.which === 9 || e.which === 13 || e.which === 27 ||
+                            e.which === 46 || (e.which >= 35 && e.which <= 40) ||
+                            (e.which === 65 && e.ctrlKey === true)) {
+                            return;
+                        }
+                        // Bloqueia caracteres que não são de 0 a 9.
+                        if (e.which < 48 || e.which > 57) {
+                            e.preventDefault();
+                        }
+                    });
+
+                    // Trata colagem de texto (apenas números inteiros são mantidos).
+                    campo.addEventListener('paste', function (e) {
+                        e.preventDefault();
+                        var texto = (e.clipboardData || window.clipboardData).getData('text');
+                        var numeros = texto.replace(/[^0-9]/g, '');
+                        if (numeros.length > 0) {
+                            campo.value = numeros;
+                            campo.dispatchEvent(new Event('input'));
+                        }
+                    });
+
+                    // Garante que o campo tenha '0' se ficar vazio ou inválido ao perder o foco.
+                    campo.addEventListener('blur', function (e) {
+                        var valor = e.target.value;
+                        if (valor === '' || valor === '-' || valor < 0) {
+                            e.target.value = '0';
+                        } else {
+                            var numeros = valor.replace(/[^0-9]/g, '');
+                            e.target.value = numeros || '0';
+                        }
+                    });
+                });
+            }
+
+            // Chama a função ao carregar a página e após AJAX.
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', aplicarValidacaoNumeroInteiro);
+            } else {
+                aplicarValidacaoNumeroInteiro();
+            }
+
+            // Garante que a validação seja reaplicada após eventos AJAX (UpdatePanel).
+            if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+                Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+                    aplicarValidacaoNumeroInteiro();
+                });
+            }
+        </script>
+    </form>
+</body>
+</html>
